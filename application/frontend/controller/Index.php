@@ -31,6 +31,9 @@ class Index extends Base
         $qrcode = json_decode($output, true);
         Log::record($qrcode);
 
+        $this->assign('user_name', session('user_name'));
+        $this->assign('user_id', session('user_id'));
+
         //return 'app\frontend\controller\Index:'.'<br>'.session('user_id')."<br>".session('user_name')."<br>'".$access_token;
         return $this->fetch();
     }

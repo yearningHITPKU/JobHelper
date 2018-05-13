@@ -11,6 +11,7 @@ namespace app\common;
 use think\Controller;
 use think\Db;
 use think\Debug;
+use think\Log;
 
 class Base extends Controller
 {
@@ -112,7 +113,7 @@ class Base extends Controller
 
     public function get_user_data()
     {
-        Debug::dump(session('user_id'));
+        Log::record(session('user_id'));
         if(!session('user_id')) {
             //获得加密的rawdata
 
