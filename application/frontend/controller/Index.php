@@ -3,9 +3,9 @@ namespace app\frontend\controller;
 
 use app\common\Base;
 use app\common\HttpService;
-use think\Debug;
 use think\Log;
 use think\Request;
+use think\Db;
 
 class Index extends Base
 {
@@ -37,4 +37,18 @@ class Index extends Base
         //return 'app\frontend\controller\Index:'.'<br>'.session('user_id')."<br>".session('user_name')."<br>'".$access_token;
         return $this->fetch();
     }
+
+    public function intern()
+    {
+        $interns = Db::name('interns')
+            ->where('is_allowed', 1)
+            ->order('time_publish desc')
+            ->field('id,title,time_publish')
+            ->paginate(10);
+
+        return json_encode($interns, JSON_UNESCAPED_UNICODE);
+
+        //return '<p>asdsadsadasd</p>';
+    }
+
 }
