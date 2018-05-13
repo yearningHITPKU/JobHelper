@@ -89,8 +89,8 @@ class Base extends Controller
                 $rawdata = $getdata['rawdata'];
                 //设置post数据
                 $data = [];
-                $data['appid'] = Db::name('webset')->where('name', 'appid')->column('value')[0];
-                $data['appsecret'] = Db::name('webset')->where('name', 'appsecret')->column('value')[0];
+                $data['appid'] = 'sspkukavr6ptmcxdsa';
+                $data['appsecret'] = '0c33bbcfc0c41af6b26748b7467e6e8e';
                 $data['content'] = $rawdata;
                 $output = HttpService::http("https://icampus.ss.pku.edu.cn/iaaa/index.php/Home/OpenApi/decode", [], $data, "POST");
                 $userdata = json_decode($output, true);
