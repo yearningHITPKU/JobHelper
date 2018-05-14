@@ -55,19 +55,23 @@ class Index extends Base
             ->paginate(10);
 
         return json_encode($interns, JSON_UNESCAPED_UNICODE);
-
-        //return '<p>asdsadsadasd</p>';
     }
 
     public function detail()
     {
         $id = request()->param('id');
-        //$id = 2;
+        Log::record($id);
         $interns = $this->db->getDetail($id);
 
         return json_encode($interns, JSON_UNESCAPED_UNICODE);
+    }
 
-        //return '<p>asdsadsadasd</p>';
+    public function thought()
+    {
+        $data = $this->db->getAll();
+        $this->assign('data', $data);
+        $this->assign('thought_type', $thought_type);
+        return $this->view->fetch();
     }
 
 }

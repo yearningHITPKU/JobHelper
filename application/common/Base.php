@@ -9,6 +9,7 @@
 namespace app\common;
 
 use think\Controller;
+use think\Debug;
 use think\Log;
 
 class Base extends Controller
@@ -21,6 +22,13 @@ class Base extends Controller
     public function get_user_data()
     {
         Log::record(session('user_id'));
+
+        /*//详细信息
+        $detailURL = 'http://weixiao.qq.com/apps/school-auth/login?media_id=gh_c5c47de251c1&app_key=116BF40DF1AFB055&redirect_uri=https://icampus.ss.pku.edu.cn/iaaa/index.php/Home/Index/appredirect//appid/sspkukavr6ptmcxdsa/detail/1.html';
+        $detailinfo = HttpService::http($detailURL,[]);
+        Log::record(json_decode($detailinfo, true));
+        Debug::dump(json_decode($detailinfo, true));*/
+
         if(!session('user_id')) {
             //获得加密的rawdata
             $getdata = input('get.');
