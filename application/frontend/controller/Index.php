@@ -50,7 +50,8 @@ class Index extends Base
         $interns = Db::name('interns')
             ->where('is_allowed', 1)
             ->order('time_publish desc')
-            ->field('id,title,time_publish');
+            ->field('id,title,time_publish')
+            ->select();
             //->paginate(10);
 
         return json_encode($interns, JSON_UNESCAPED_UNICODE);
