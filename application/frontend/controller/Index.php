@@ -77,20 +77,21 @@ class Index extends Base
     public function publish()
     {
         $user_id = request()->param('user_id');
-        $detail = request()->param('push.detail');
-        $grade = request()->param('push.grade');
-        $location = request()->param('push.location');
-        $position = request()->param('push.position');
-        $title = request()->param('push.title');
-        $type = request()->param('push.type');
+        $detail = request()->param('detail');
+        $grade = request()->param('grade');
+        $location = request()->param('location');
+        $position = request()->param('position');
+        $title = request()->param('title');
+        $type = request()->param('purpose');
+        $owner = request()->param('owner_name');
 
-        $push = request()->param('push');
+        /*$push = request()->param('push');
         $detail = $push['detail'];
         $grade = $push['grade'];
         $location = $push['location'];
         $position = $push['position'];
         $title = $push['title'];
-        $type = $push['type'];
+        $type = $push['type'];*/
 
         /*$user_id = "1701210929";
         $detail = "sadsad";
@@ -108,6 +109,7 @@ class Index extends Base
         $intern->title = $title;
         $intern->type = $type;
         $intern->owner_id = $user_id;
+        $intern->owner_name = $owner;
         $intern->save();
 
         return json_encode($intern, JSON_UNESCAPED_UNICODE);
