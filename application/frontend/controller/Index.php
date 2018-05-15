@@ -84,6 +84,14 @@ class Index extends Base
         $title = request()->param('push.title');
         $type = request()->param('push.type');
 
+        $push = request()->param('push');
+        $detail = $push['detail'];
+        $grade = $push['grade'];
+        $location = $push['location'];
+        $position = $push['position'];
+        $title = $push['title'];
+        $type = $push['type'];
+
         /*$user_id = "1701210929";
         $detail = "sadsad";
         $grade = "sadsad";
