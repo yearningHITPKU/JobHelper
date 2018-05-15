@@ -85,6 +85,9 @@ class Index extends Base
         $type = request()->param('purpose');
         $owner = request()->param('owner_name');
 
+        $data= request()->param();
+        Log::record($data['data']['data']['num']);
+
         /*$push = request()->param('push');
         $detail = $push['detail'];
         $grade = $push['grade'];

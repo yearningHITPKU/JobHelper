@@ -34,4 +34,25 @@ class Thought extends Base
 
         return json_encode($details, JSON_UNESCAPED_UNICODE);
     }
+
+    public function publish()
+    {
+        $user_id = request()->param('user_id');
+        $owner = request()->param('owner_name');
+        $title = request()->param('title');
+        $corp_name = request()->param('corp_name');
+        $position = request()->param('position');
+        $detail = request()->param('detail');
+
+        $thought = new \app\frontend\model\Thought();
+        $thought->detail = $detail;
+        $thought->corp_name = $corp_name;
+        $thought->position = $position;
+        $thought->title = $title;
+        $thought->owner_id = $user_id;
+        $thought->owner_name = $owner;
+        $thought->save();
+
+        return json_encode($thought, JSON_UNESCAPED_UNICODE);
+    }
 }
