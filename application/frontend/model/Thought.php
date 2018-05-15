@@ -30,4 +30,11 @@ class Thought extends Model
         return $res;
     }
 
+    public function getUserThought($user_id)
+    {
+        $res = Db::query('select id,title,time_publish from thoughts where owner_id=? ORDER BY time_publish DESC', [$user_id]);
+        //halt($res);
+        return $res;
+    }
+
 }

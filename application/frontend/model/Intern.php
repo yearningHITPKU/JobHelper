@@ -3,11 +3,13 @@
 namespace app\frontend\model;
 
 use think\Model;
+use think\Db;
 
 class Intern extends Model
 {
     protected $pk = 'id';
     protected $table = 'interns';
+
     public function getAll($search)
     {
         $search_industry = [];
@@ -31,5 +33,11 @@ class Intern extends Model
     {
         $this->where('id', $id)->setInc('click_times', 1);
         return $this->where('id',$id)->find();
+    }
+
+    public function getUserIntern($user_id)
+    {
+        $res = Db::query('select id,title,time_publish from interns where owner_id=? and is_allowed=? ORDER BY time_publish DESC', [$user_id, 1]);
+        return $res;
     }
 }

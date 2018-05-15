@@ -13,43 +13,25 @@ class Thought extends Base
         $this->db = new \app\frontend\model\Thought();
     }
 
-    /**
-     * 显示实习内推信息列表
-     * @return string
-     * @throws \think\Exception
-     */
     public function index()
     {
         $data = $this->db->getAll();
         return json_encode($data, JSON_UNESCAPED_UNICODE);
     }
 
-    /**
-     * 显示实习内推信息详情
-     * @return string
-     * @throws \think\Exception
-     */
     public function detail()
     {
-        //$id = input('param.id');
         $id = request()->param('id');
-        //$thought_type = input(('param.thought_type'));
         $details = $this->db->getDetail($id);
-        //halt($details);
-        //halt($thought_type);
 
         return json_encode($details, JSON_UNESCAPED_UNICODE);
     }
 
-/*    public function ()
+    public function mythought()
     {
-        //$id = input('param.id');
-        $id = request()->param('id');
-        //$thought_type = input(('param.thought_type'));
-        $details = $this->db->getDetail($id);
-        //halt($details);
-        //halt($thought_type);
+        $id = request()->param('user_id');
+        $details = $this->db->getUserThought($id);
 
         return json_encode($details, JSON_UNESCAPED_UNICODE);
-    }*/
+    }
 }
