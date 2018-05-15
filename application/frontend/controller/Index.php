@@ -84,6 +84,14 @@ class Index extends Base
         $title = request()->param('push.title');
         $type = request()->param('push.type');
 
+        /*$user_id = "1701210929";
+        $detail = "sadsad";
+        $grade = "sadsad";
+        $location = "sadsad";
+        $position = "sadsad";
+        $title = "sadsad";
+        $type = "sadsad";*/
+
         $intern = new Intern;
         $intern->detail = $detail;
         $intern->grade = $grade;
@@ -91,8 +99,9 @@ class Index extends Base
         $intern->position = $position;
         $intern->title = $title;
         $intern->type = $type;
+        $intern->owner_id = $user_id;
         $intern->save();
 
-        return $intern->id;
+        return json_encode($intern, JSON_UNESCAPED_UNICODE);
     }
 }
