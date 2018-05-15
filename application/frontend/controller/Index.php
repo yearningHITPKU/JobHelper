@@ -3,6 +3,7 @@ namespace app\frontend\controller;
 
 use app\common\Base;
 use app\common\HttpService;
+use app\frontend\model\Intern;
 use think\Log;
 use think\Request;
 use think\Db;
@@ -69,9 +70,29 @@ class Index extends Base
     public function myIntern()
     {
         $id = request()->param('user_id');
-        //$id = '1701210926';
         $data = $this->db->getUserIntern($id);
         return json_encode($data, JSON_UNESCAPED_UNICODE);
     }
 
+    public function publish()
+    {
+        $user_id = request()->param('user_id');
+        $detail = request()->param('push.detail');
+        $grade = request()->param('push.grade');
+        $location = request()->param('push.location');
+        $position = request()->param('push.position');
+        $title = request()->param('push.title');
+        $type = request()->param('push.type');
+
+        $intern = new Intern;
+        $intern->detail = $detail;
+        $intern->grade = $grade;
+        $intern->location = $location;
+        $intern->position = $position;
+        $intern->title = $title;
+        $intern->type = $type;
+        $intern->save();
+
+        return $intern->id;
+    }
 }
