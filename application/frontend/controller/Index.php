@@ -81,28 +81,13 @@ class Index extends Base
         $grade = request()->param('grade');
         $location = request()->param('location');
         $position = request()->param('position');
+        $corp_name = request()->param('corp_name');
         $title = request()->param('title');
         $type = request()->param('purpose');
         $owner = request()->param('owner_name');
 
-        $data= request()->param();
-        Log::record($data['data']['data']['num']);
-
-        /*$push = request()->param('push');
-        $detail = $push['detail'];
-        $grade = $push['grade'];
-        $location = $push['location'];
-        $position = $push['position'];
-        $title = $push['title'];
-        $type = $push['type'];*/
-
-        /*$user_id = "1701210929";
-        $detail = "sadsad";
-        $grade = "sadsad";
-        $location = "sadsad";
-        $position = "sadsad";
-        $title = "sadsad";
-        $type = "sadsad";*/
+        /*$data= request()->param();
+        Log::record($data['data']['data']['num']);*/
 
         $intern = new Intern;
         $intern->detail = $detail;
@@ -110,6 +95,7 @@ class Index extends Base
         $intern->location = $location;
         $intern->position = $position;
         $intern->title = $title;
+        $intern->corp_name = $corp_name;
         $intern->type = $type;
         $intern->owner_id = $user_id;
         $intern->owner_name = $owner;
