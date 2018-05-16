@@ -39,7 +39,7 @@ class Index extends Base
             // 不存在该用户的小程序码，则线获取并生成小程序码，再读取
             $data = [];
             $data['scene'] = session('user_id').'&'.$this->unicode_encode(session('user_name'));
-            Debug::dump($data['scene']);
+            //Debug::dump($data['scene']);
             $data['page'] = "pages/pushInfo/pushInfo";
             $json = json_encode($data);
             //$data['width'] = 430;
