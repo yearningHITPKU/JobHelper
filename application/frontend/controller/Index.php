@@ -75,7 +75,7 @@ class Index extends Base
         $interns = Db::name('interns')
             ->where('is_allowed', 1)
             ->order('time_publish desc')
-            ->field('id,title,time_publish,location,position')
+            ->field('id,title,time_publish,location,position,salary')
             ->select();
             //->paginate(10);
 
@@ -101,6 +101,7 @@ class Index extends Base
     public function publish()
     {
         $user_id = request()->param('user_id');
+        $owner = request()->param('owner_name');
         $detail = request()->param('detail');
         $grade = request()->param('grade');
         $location = request()->param('location');
@@ -108,7 +109,7 @@ class Index extends Base
         $corp_name = request()->param('corp_name');
         $title = request()->param('title');
         $type = request()->param('purpose');
-        $owner = request()->param('owner_name');
+        $salary = request()->param('salary');
 
         /*$data= request()->param();
         Log::record($data['data']['data']['num']);*/
@@ -123,6 +124,7 @@ class Index extends Base
         $intern->type = $type;
         $intern->owner_id = $user_id;
         $intern->owner_name = $owner;
+        $intern->salary = $salary;
         $intern->save();
 
         return json_encode($intern, JSON_UNESCAPED_UNICODE);
