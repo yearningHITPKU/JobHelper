@@ -8,6 +8,7 @@
 
 namespace app\common;
 
+use app\frontend\model\AccessToken;
 use think\Controller;
 use think\Debug;
 use think\Log;
@@ -72,9 +73,99 @@ class Base extends Controller
         $data['appid'] = "wx87a61a8e29066d1f";
         $data['secret'] = "b40d22eaf4c41acc3a2bf328a2174b9a";
 
-        $return = HttpService::http("https://api.weixin.qq.com/cgi-bin/token",$data);
-        $result = json_decode($return, true);
+        // 查数据库，判断是否没有access_token
+        $atModel = new AccessToken();
+        $res = $atModel->select();
+        Debug::dump(json_encode($res, JSON_UNESCAPED_UNICODE));
+        $size = sizeof($res);
+        Debug::dump($size);
 
-        session('access_token',$result['access_token']);
+        $time = time();
+        Debug::dump($time);
+        Debug::dump($time + 6600);
+
+        // 如果没有access_token
+        if($size == 0){
+            //获取access_token
+            $return = HttpService::http("https://api.weixin.qq.com/cgi-bin/token",$data);
+            $result = json_decode($return, true);
+            session('access_token',$result['access_token']);
+            //插入数据库
+            $atInsert = new AccessToken;
+            $atInsert->token = session('access_token');
+            $atInsert->invalid_time = $time + 6600;
+            $atInsert->save();
+        }else{
+            //判断access_token是否超时
+            if($res[0]['invalid_time'] < $time){
+                // 超时，则重新获取access_token，并更新原来的access_token
+                $return = HttpService::http("https://api.weixin.qq.com/cgi-bin/token",$data);
+                $result = json_decode($return, true);
+                session('access_token',$result['access_token']);
+                Debug::dump(session('access_token'));
+
+                Debug::dump($res[0]['invalid_time']);
+                $atInsert = new AccessToken;
+                $atInsert->save([
+                    'token'  => session('access_token'),
+                    'invalid_time' => $time + 6600
+                ],['id' => $res[0]['id']]);
+            }else{
+                // 没超时，则设置access_token为最新的token
+                session('access_token',$res[0]['token']);
+                Debug::dump(session('access_token'));
+            }
+        }
+    }
+
+    public function unicode_encode($name)
+    {
+        $name = iconv('UTF-8', 'UCS-2', $name);
+        $len = strlen($name);
+        $str = '';
+        for ($i = 0; $i < $len - 1; $i = $i + 2)
+        {
+            $c = $name[$i];
+            $c2 = $name[$i + 1];
+            if (ord($c) > 0)
+            {    // 两个字节的文字
+                //$str .= '\u'.base_convert(ord($c), 10, 16).base_convert(ord($c2), 10, 16);
+                $str .= base_convert(ord($c), 10, 16).base_convert(ord($c2), 10, 16);
+            }
+            else
+            {
+                $str .= $c2;
+            }
+        }
+        return $str;
+    }
+
+    // 将UNICODE编码后的内容进行解码，编码后的内容格式：\u56fe\u7247 （原始：图片）
+    public function unicode_decode($name)
+    {
+        // 转换编码，将Unicode编码转换成可以浏览的utf-8编码
+        $pattern = '/([\w]+)|(\\\u([\w]{4}))/i';
+        preg_match_all($pattern, $name, $matches);
+        if (!empty($matches))
+        {
+            $name = '';
+            for ($j = 0; $j < count($matches[0]); $j++)
+            {
+                $str = $matches[0][$j];
+                if (strpos($str, '\\u') === 0)
+                {
+                    $code = base_convert(substr($str, 2, 2), 16, 10);
+                    $code2 = base_convert(substr($str, 4), 16, 10);
+                    $c = chr($code).chr($code2);
+                    $c = iconv('UCS-2', 'UTF-8', $c);
+                    $name .= $c;
+                }
+                else
+                {
+                    $name .= $str;
+                }
+            }
+        }
+        return $name;
     }
 }

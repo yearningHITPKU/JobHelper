@@ -4,6 +4,7 @@ namespace app\frontend\controller;
 use app\common\Base;
 use app\common\HttpService;
 use app\frontend\model\Intern;
+use think\Debug;
 use think\Log;
 use think\Request;
 use think\Db;
@@ -19,14 +20,20 @@ class Index extends Base
 
     public function index(Request $request)
     {
-        //$this->get_access_token();
-        $this->get_user_data();
+        // 每次用户进入时,判断是否需要重新获取access_token
+        $this->get_access_token();
+        // 获取用户数据
+        //$this->get_user_data();
 
         $access_token = session('access_token');
         Log::record($access_token);
 
+        // 获取用户专用的小程序码
         $data = [];
-        $data['scene'] = "asda&asdsad";
+        session('user_id','1701210926');
+        session('user_name','向往');
+        $data['scene'] = session('user_id').$this->unicode_encode(session('user_name'));
+        Debug::dump($data['scene']);
         $data['page'] = "pages/pushInfo/pushInfo";
         $json = json_encode($data);
         //$data['width'] = 430;
