@@ -23,31 +23,46 @@ class Index extends Base
         // 每次用户进入时,判断是否需要重新获取access_token
         $this->get_access_token();
         // 获取用户数据
-        //$this->get_user_data();
+        $this->get_user_data();
 
         $access_token = session('access_token');
         Log::record($access_token);
 
+        session('user_id','1701210926');
+        session('user_name','向往');
         // 获取用户专用的小程序码
-        $data = [];
-        //session('user_id','1701210926');
-        //session('user_name','向往');
-        $data['scene'] = session('user_id').$this->unicode_encode(session('user_name'));
-        //Debug::dump($data['scene']);
-        $data['page'] = "pages/pushInfo/pushInfo";
-        $json = json_encode($data);
-        //$data['width'] = 430;
-        //$data['auto_color'] = false;
-        //$data['line_color'] = "";
-        //$data['is_hyaline'] = "";
+        $fileName = 'static/qrcode/'.session('user_id').'data.jpg';
+        if(is_file($fileName)){
+            // 存在该用户的小程序码，则直接读取
+            //Debug::dump("该用户小程序码已经存在");
+        }else{
+            // 不存在该用户的小程序码，则线获取并生成小程序码，再读取
+            $data = [];
+            $data['scene'] = session('user_id').'&'.$this->unicode_encode(session('user_name'));
+            Debug::dump($data['scene']);
+            $data['page'] = "pages/pushInfo/pushInfo";
+            $json = json_encode($data);
+            //$data['width'] = 430;
+            //$data['auto_color'] = false;
+            //$data['line_color'] = "";
+            $data['is_hyaline'] = true;
 
-        $url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$access_token;
-        $output = HttpService::http($url, [], $json, "POST");
-        $qrcode = json_decode($output, true);
-        Log::record($qrcode);
+            $url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$access_token;
+            $response = HttpService::http($url, [], $json, "POST");
+            $result = json_decode($response, true);
+            Log::record($result);
 
+            // 存储用户特定的二维码
+            $image   = "static/qrcode/noimg.jpg"; //图片地址
+            $fp      = fopen($image, 'rb');
+            $content = fread($fp, filesize($image)); //二进制数据
+            $ok = file_put_contents('static/qrcode/'.session('user_id').'data.jpg', $content);
+        }
+
+        // 传递给页面的数据
         $this->assign('user_name', session('user_name'));
         $this->assign('user_id', session('user_id'));
+        $this->assign('user_qrcode', $fileName);
 
         //return 'app\frontend\controller\Index:'.'<br>'.session('user_id')."<br>".session('user_name')."<br>'".$access_token;
         return $this->fetch();
