@@ -138,7 +138,10 @@ class Index extends Base
             ->field('id,title,time_publish,location,position,salary')
             ->select();
 
-        $thoughts = Db::query('select id,title,time_publish from thoughts ORDER BY time_publish DESC');
+        $thoughts = Db::name('thoughts')
+            ->order('time_publish desc')
+            ->field('id,title,corp_name,position,time_publish')
+            ->select();
 
         $both = array($interns,$thoughts);
         return json_encode($both, JSON_UNESCAPED_UNICODE);
