@@ -76,13 +76,13 @@ class Base extends Controller
         // 查数据库，判断是否没有access_token
         $atModel = new AccessToken();
         $res = $atModel->select();
-        Debug::dump(json_encode($res, JSON_UNESCAPED_UNICODE));
+        //Debug::dump(json_encode($res, JSON_UNESCAPED_UNICODE));
         $size = sizeof($res);
-        Debug::dump($size);
+        //Debug::dump($size);
 
         $time = time();
-        Debug::dump($time);
-        Debug::dump($time + 6600);
+        //Debug::dump($time);
+        //Debug::dump($time + 6600);
 
         // 如果没有access_token
         if($size == 0){
@@ -102,9 +102,9 @@ class Base extends Controller
                 $return = HttpService::http("https://api.weixin.qq.com/cgi-bin/token",$data);
                 $result = json_decode($return, true);
                 session('access_token',$result['access_token']);
-                Debug::dump(session('access_token'));
+                //Debug::dump(session('access_token'));
 
-                Debug::dump($res[0]['invalid_time']);
+                //Debug::dump($res[0]['invalid_time']);
                 $atInsert = new AccessToken;
                 $atInsert->save([
                     'token'  => session('access_token'),
@@ -113,7 +113,7 @@ class Base extends Controller
             }else{
                 // 没超时，则设置access_token为最新的token
                 session('access_token',$res[0]['token']);
-                Debug::dump(session('access_token'));
+                //Debug::dump(session('access_token'));
             }
         }
     }

@@ -30,8 +30,8 @@ class Index extends Base
 
         // 获取用户专用的小程序码
         $data = [];
-        session('user_id','1701210926');
-        session('user_name','向往');
+        //session('user_id','1701210926');
+        //session('user_name','向往');
         $data['scene'] = session('user_id').$this->unicode_encode(session('user_name'));
         Debug::dump($data['scene']);
         $data['page'] = "pages/pushInfo/pushInfo";
