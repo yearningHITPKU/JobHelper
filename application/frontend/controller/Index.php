@@ -129,4 +129,37 @@ class Index extends Base
 
         return json_encode($intern, JSON_UNESCAPED_UNICODE);
     }
+
+    public function intern_thought()
+    {
+        $interns = Db::name('interns')
+            ->where('is_allowed', 1)
+            ->order('time_publish desc')
+            ->field('id,title,time_publish,location,position,salary')
+            ->select();
+
+        $thoughts = Db::query('select id,title,time_publish from thoughts ORDER BY time_publish DESC');
+
+        $both = array($interns,$thoughts);
+        return json_encode($both, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function my_intern_thought()
+    {
+        $id = request()->param('user_id');
+        $interns = Db::name('interns')
+            ->where('owner_id', $id)
+            ->order('time_publish desc')
+            ->field('id,title,time_publish,location,position,salary')
+            ->select();
+        //$interns = $this->db->getUserIntern($id);
+        //$thoughts = Db::query('select * from thoughts where owner_id=? ORDER BY time_publish DESC', [$id]);
+        $thoughts = Db::name('thoughts')
+            ->where('owner_id', $id)
+            ->order('time_publish desc')
+            ->field('id,title,corp_name,position,time_publish')
+            ->select();
+        $both = array($interns,$thoughts);
+        return json_encode($both, JSON_UNESCAPED_UNICODE);
+    }
 }

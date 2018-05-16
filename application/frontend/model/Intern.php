@@ -37,7 +37,7 @@ class Intern extends Model
 
     public function getUserIntern($user_id)
     {
-        $res = Db::query('select id,title,time_publish from interns where owner_id=? and is_allowed=? ORDER BY time_publish DESC', [$user_id, 1]);
+        $res = Db::query('select * from interns where owner_id=? and is_allowed=? ORDER BY time_publish DESC', [$user_id, 1]);
         return $res;
     }
 }
