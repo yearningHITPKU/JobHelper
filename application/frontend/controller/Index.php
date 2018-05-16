@@ -28,8 +28,8 @@ class Index extends Base
         $access_token = session('access_token');
         Log::record($access_token);
 
-        session('user_id','1701210926');
-        session('user_name','向往');
+        //session('user_id','1701210926');
+        //session('user_name','向往');
         // 获取用户专用的小程序码
         $fileName = 'static/qrcode/'.session('user_id').'data.jpg';
         if(is_file($fileName)){
