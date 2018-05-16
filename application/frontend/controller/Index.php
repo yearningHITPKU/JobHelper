@@ -165,4 +165,25 @@ class Index extends Base
         $both = array($interns,$thoughts);
         return json_encode($both, JSON_UNESCAPED_UNICODE);
     }
+
+    public function search()
+    {
+        $city = Db::name('cities')->select();
+        $industry = Db::name('industries')->select();
+        $company = Db::name('companies')->select();
+        //$this->assign('city', $city);
+        //$this->assign('industry', $industry);
+        //$this->assign('company', $company);
+        $search = ['city'=>'', 'industry'=>'', 'company'=>'', 'keyword'=>''];
+        if(request()->isPost()) {
+            $search['city']=input("post.city") == '不限' ? '' : input("post.city");
+            $search['industry']=input("post.industry") == '不限' ? 0 : input("post.industry");
+            $search['company']=input('post.company') == '不限' ? '' : input("post.company");
+            $search['keyword']=input('keyword');
+        }
+        //halt($search);
+        $data = $this->db->getAll($search);
+        //$this->assign('data', $data);
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
 }

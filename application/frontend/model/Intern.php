@@ -22,8 +22,9 @@ class Intern extends Model
             ->where($search_industry)
             ->where(['title|detail'=>['like',"%".$search['keyword']."%"]])
             ->order('is_pinned desc,time_publish desc')
-            ->field('id,title,time_publish,is_pinned')
-            ->paginate(15);
+            ->field('id,title,time_publish,location,position,salary,is_pinned')
+            ->select();
+            //->paginate(15);
         //halt($res);
         //echo $this->getLastSql();
         return $res;
