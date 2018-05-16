@@ -70,8 +70,8 @@ class Base extends Controller
     {
         $data = [];
         $data['grant_type'] = "client_credential";
-        $data['appid'] = "wx87a61a8e29066d1f";
-        $data['secret'] = "b40d22eaf4c41acc3a2bf328a2174b9a";
+        $data['appid'] = "wxeccb9b302659eec5";
+        $data['secret'] = "992f62451978f18d881903051a794129";
 
         // 查数据库，判断是否没有access_token
         $atModel = new AccessToken();

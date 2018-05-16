@@ -24,13 +24,13 @@ class Index extends Base
         $this->get_access_token();
         // 获取用户数据
         $this->get_user_data();
+        /*session('user_id','1701210926');
+        session('user_name','向往');*/
 
         $access_token = session('access_token');
         Log::record($access_token);
 
-        //session('user_id','1701210926');
-        //session('user_name','向往');
-        // 获取用户专用的小程序码
+        /*// 获取用户专用的小程序码
         $fileName = 'static/qrcode/'.session('user_id').'data.jpg';
         if(is_file($fileName)){
             // 存在该用户的小程序码，则直接读取
@@ -39,6 +39,7 @@ class Index extends Base
             // 不存在该用户的小程序码，则线获取并生成小程序码，再读取
             $data = [];
             $data['scene'] = session('user_id').'&'.$this->unicode_encode(session('user_name'));
+            //$data['path'] = 'pages/pushInfo/pushInfo';
             //Debug::dump($data['scene']);
             $data['page'] = "pages/pushInfo/pushInfo";
             $json = json_encode($data);
@@ -50,6 +51,7 @@ class Index extends Base
             $url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$access_token;
             $response = HttpService::http($url, [], $json, "POST");
             $result = json_decode($response, true);
+            Log::record($response);
             Log::record($result);
 
             // 存储用户特定的二维码
@@ -57,12 +59,13 @@ class Index extends Base
             $fp      = fopen($image, 'rb');
             $content = fread($fp, filesize($image)); //二进制数据
             $ok = file_put_contents('static/qrcode/'.session('user_id').'data.jpg', $content);
-        }
+        }*/
 
         // 传递给页面的数据
         $this->assign('user_name', session('user_name'));
         $this->assign('user_id', session('user_id'));
-        $this->assign('user_qrcode', $fileName);
+        $this->assign('user_qrcode', 'static/qrcode/qrcode.jpg');
+        //$this->assign('user_qrcode', $fileName);
 
         //return 'app\frontend\controller\Index:'.'<br>'.session('user_id')."<br>".session('user_name')."<br>'".$access_token;
         return $this->fetch();
