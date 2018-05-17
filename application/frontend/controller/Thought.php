@@ -22,8 +22,8 @@ class Thought extends Base
     public function detail()
     {
         $id = request()->param('id');
-        $details = $this->db->getDetail($id);
-
+        $user_id = request()->param('user_id');
+        $details = $this->db->getDetail($id,$user_id);
         return json_encode($details, JSON_UNESCAPED_UNICODE);
     }
 

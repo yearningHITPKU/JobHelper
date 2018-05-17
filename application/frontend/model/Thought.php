@@ -17,10 +17,27 @@ class Thought extends Model
         //halt($res);
         return $res;
     }
-    public function getDetail($id)
+    public function getDetail($id,$user_id)
     {
         $this->where('id', $id)->setInc('click_times', 1);
-        return $this->where('id',$id)->find();
+        $res1 = $this->where('id',$id)->find();
+        $res2 = Db::name('collection')
+            ->where('user_id',$user_id)
+            ->where('target_id',$id)
+            ->where('target_type',1)
+            ->select();
+        $isCollected = false;
+        if(sizeof($res2) == 0){
+            $isCollected = false;
+        }else{
+            $isCollected = true;
+        }
+
+        $res['data'] = $res1;
+        $res['isCollected'] = $isCollected;
+        //return $this->where('id',$id)->find();
+        return $res;
+        //return $this->where('id',$id)->find();
     }
 
     public function getAll()
