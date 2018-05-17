@@ -2,7 +2,6 @@
 namespace app\frontend\controller;
 
 use app\common\Base;
-use app\common\HttpService;
 use app\frontend\model\Intern;
 use think\Debug;
 use think\Log;
@@ -85,8 +84,9 @@ class Index extends Base
     public function detail()
     {
         $id = request()->param('id');
+        $user_id = request()->param('user_id');
         Log::record($id);
-        $interns = $this->db->getDetail($id);
+        $interns = $this->db->getDetail($id,$user_id);
 
         return json_encode($interns, JSON_UNESCAPED_UNICODE);
     }

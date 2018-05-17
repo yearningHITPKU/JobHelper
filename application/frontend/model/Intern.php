@@ -20,10 +20,34 @@ class Intern extends Model
         return $res;
     }
 
-    public function getDetail($id)
+    public function getDetail($id,$user_id)
     {
         $this->where('id', $id)->setInc('click_times', 1);
-        return $this->where('id',$id)->find();
+        /*$res = Db::table('interns')
+            ->alias('i')
+            ->where('i.id',$id)
+            ->join('collection c', 'i.id = c.target_id')
+            ->where('c.user_id',$user_id)
+            ->where('c.target_type',0)
+            ->field('')
+            ->select();*/
+        $res1 = $this->where('id',$id)->find();
+        $res2 = Db::name('collection')
+            ->where('user_id',$user_id)
+            ->where('target_id',$id)
+            ->where('target_type',0)
+            ->select();
+        $isCollected = false;
+        if(sizeof($res2) == 0){
+            $isCollected = false;
+        }else{
+            $isCollected = true;
+        }
+
+        $res['data'] = $res1;
+        $res['isCollected'] = $isCollected;
+        //return $this->where('id',$id)->find();
+        return $res;
     }
 
     public function getUserIntern($user_id)
