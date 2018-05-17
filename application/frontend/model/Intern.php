@@ -12,21 +12,11 @@ class Intern extends Model
 
     public function getAll($search)
     {
-        $search_industry = [];
-        if($search['industry'] != 0) {
-            $search_industry = ['industry'=>$search['industry']];
-        }
         $res = $this->where('is_allowed', 1)
-            ->where(['corp_name'=>['like',"%".$search['company']."%"]])
-            ->where(['location'=>['like',"%".$search['city']."%"]])
-            ->where($search_industry)
-            ->where(['title|detail'=>['like',"%".$search['keyword']."%"]])
+            ->where(['title|corp_name|location|detail|salary|owner_id|owner_name'=>['like',"%".$search."%"]])
             ->order('is_pinned desc,time_publish desc')
             ->field('id,title,time_publish,location,position,salary,is_pinned')
             ->select();
-            //->paginate(15);
-        //halt($res);
-        //echo $this->getLastSql();
         return $res;
     }
 

@@ -38,8 +38,15 @@ class Thought extends Model
             ->order('time_publish desc')
             ->field('id,title,corp_name,position,time_publish')
             ->select();
-        //halt($res);
         return $res;
     }
 
+    public function getSearch($search)
+    {
+        $res = $this->where(['owner_id|title|corp_name|position|detail|owner_name'=>['like',"%".$search."%"]])
+            ->order('time_publish desc')
+            ->field('id,title,corp_name,position,time_publish')
+            ->select();
+        return $res;
+    }
 }

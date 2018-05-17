@@ -55,4 +55,10 @@ class Thought extends Base
 
         return json_encode($thought, JSON_UNESCAPED_UNICODE);
     }
+
+    public function search()
+    {
+        $data = $this->db->getSearch(input('keyword'));
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
 }
