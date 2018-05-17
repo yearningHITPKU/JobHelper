@@ -3,7 +3,6 @@
 namespace app\frontend\controller;
 
 use app\common\Base;
-use app\frontend\model\User;
 use think\Debug;
 
 class Collection extends Base
@@ -30,7 +29,7 @@ class Collection extends Base
             $collection->target_type = $target_type;
             $collection->save();
         }else{
-            User::destroy(['user_id'=>$user_id, 'target_id'=>$target_id, 'target_type'=>$target_type]);
+            \app\frontend\model\Collection::destroy(['user_id'=>$user_id, 'target_id'=>$target_id, 'target_type'=>$target_type]);
         }
         //return json_encode($collection, JSON_UNESCAPED_UNICODE);
     }
