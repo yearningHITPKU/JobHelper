@@ -3,6 +3,7 @@
 namespace app\frontend\controller;
 
 use app\common\Base;
+use app\frontend\model\User;
 use think\Debug;
 
 class Collection extends Base
