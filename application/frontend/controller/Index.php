@@ -172,4 +172,24 @@ class Index extends Base
         $data = $this->db->getAll(input('keyword'));
         return json_encode($data, JSON_UNESCAPED_UNICODE);
     }
+
+    public function delete()
+    {
+        $user_id = request()->param('user_id');
+        $id = request()->param('id');
+        $currentTab = request()->param('currentTab');
+
+        $res = 0;
+        if($currentTab == 0){
+            $res = Intern::destroy($id);
+        }elseif ($currentTab == 1){
+            $res = \app\frontend\model\Thought::destroy($id);
+        }elseif ($currentTab == 2){
+            $res = \app\frontend\model\Collection::destroy(['user_id'=>$user_id, 'target_id'=>$id, 'target_type'=>0]);
+        }elseif ($currentTab == 3){
+            $res = \app\frontend\model\Collection::destroy(['user_id'=>$user_id, 'target_id'=>$id, 'target_type'=>1]);
+        }
+
+        return json_encode($res, JSON_UNESCAPED_UNICODE);
+    }
 }
