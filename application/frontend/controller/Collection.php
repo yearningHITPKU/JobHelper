@@ -4,6 +4,7 @@ namespace app\frontend\controller;
 
 use app\common\Base;
 use think\Debug;
+use think\Db;
 
 class Collection extends Base
 {
@@ -36,6 +37,25 @@ class Collection extends Base
 
     public function get_my_collection()
     {
+        $user_id = request()->param('user_id');
+        $c_interns = Db::name('collection')
+            ->alias('c')
+            ->where('user_id', $user_id)
+            ->join('interns i', 'i.id = c.target_id')
+            ->where('i.is_allowed', 1)
+            ->order('time_publish desc')
+            ->field('i.id,i.title,i.time_publish,i.location,i.position,i.salary,c.target_id')
+            ->select();
 
+        $c_thoughts = Db::name('collection')
+            ->alias('c')
+            ->where('user_id', $user_id)
+            ->join('thoughts t', 'c.target_id = t.id')
+            ->order('t.time_publish desc')
+            ->field('t.id,t.title,t.corp_name,t.position,t.time_publish,c.target_id')
+            ->select();
+
+        $both = array($c_interns,$c_thoughts);
+        return json_encode($both, JSON_UNESCAPED_UNICODE);
     }
 }
