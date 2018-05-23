@@ -22,6 +22,7 @@ class Intern extends Model
 
     public function getDetail($id,$user_id)
     {
+        // 点击次数加1
         $this->where('id', $id)->setInc('click_times', 1);
         /*$res = Db::table('interns')
             ->alias('i')
@@ -31,7 +32,12 @@ class Intern extends Model
             ->where('c.target_type',0)
             ->field('')
             ->select();*/
-        $res1 = $this->where('id',$id)->find();
+        //$res1 = $this->where('id',$id)->find();
+        $res1 = $this->alias('i')
+            ->join('__USER__ u', 'i.owner_id=u.id')
+            ->where('i.id', $id)
+            ->field('i.*, u.name as owner_name')
+            ->find();
         $res2 = Db::name('collection')
             ->where('user_id',$user_id)
             ->where('target_id',$id)
