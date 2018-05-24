@@ -3,6 +3,8 @@
 namespace app\frontend\controller;
 
 use app\common\Base;
+use think\Db;
+
 
 class Thought extends Base
 {
