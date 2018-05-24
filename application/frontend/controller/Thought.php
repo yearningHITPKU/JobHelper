@@ -18,11 +18,17 @@ class Thought extends Base
         $pageindex = request()->param('pageIndex');
         $callbackcount = request()->param('callBackCount');
 
-        $data = $this->db->getAll();
+        $thoughtsAll = Db::name('thoughts')
+            ->order('time_publish desc')
+            ->field('id,title,corp_name,position,time_publish')
+            ->select();
+        $thoughts = array_slice($thoughtsAll, ($pageindex-1)*$callbackcount, $callbackcount);
 
-        $result = array_slice($data, ($pageindex-1)*$callbackcount, $callbackcount);
+        //$data = $this->db->getAll();
 
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
+        //$result = array_slice($data, ($pageindex-1)*$callbackcount, $callbackcount);
+
+        return json_encode($thoughts, JSON_UNESCAPED_UNICODE);
     }
 
     public function detail()
