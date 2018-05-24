@@ -169,17 +169,6 @@ class Intern extends Base
     }
 
     /**
-     * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * 将选定的一条实习内推信息添加到已删除列表
      *
      * @param  \think\Request  $request
