@@ -71,14 +71,18 @@ class Index extends Base
 
     public function intern()
     {
+        $pageindex = request()->param('pageIndex');
+        $callbackcount = request()->param('callBackCount');
+
         $interns = Db::name('interns')
             ->where('is_allowed', 1)
             ->order('time_publish desc')
             ->field('id,title,time_publish,location,position,salary')
             ->select();
-            //->paginate(10);
+            //->paginate(5);
+        $result = array_slice($interns, ($pageindex-1)*$callbackcount, $callbackcount );
 
-        return json_encode($interns, JSON_UNESCAPED_UNICODE);
+        return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     public function detail()
@@ -133,16 +137,21 @@ class Index extends Base
 
     public function intern_thought()
     {
-        $interns = Db::name('interns')
+        $callbackcount = request()->param('callBackCount');
+
+        $internsAll = Db::name('interns')
             ->where('is_allowed', 1)
             ->order('time_publish desc')
             ->field('id,title,time_publish,location,position,salary')
             ->select();
+        $interns = array_slice($internsAll, 0, $callbackcount);
 
-        $thoughts = Db::name('thoughts')
+
+        $thoughtsAll = Db::name('thoughts')
             ->order('time_publish desc')
             ->field('id,title,corp_name,position,time_publish')
             ->select();
+        $thoughts = array_slice($thoughtsAll, 0, $callbackcount);
 
         $both = array($interns,$thoughts);
         return json_encode($both, JSON_UNESCAPED_UNICODE);

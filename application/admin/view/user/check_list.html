@@ -1,0 +1,355 @@
+{include file='public/header'}
+    <body>
+        <div class="x-nav">
+            <span class="layui-breadcrumb">
+              <a><cite>首页</cite></a>
+              <a><cite>用户管理</cite></a>
+            </span>
+            <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新">
+                <i class="layui-icon" style="line-height:30px">
+                    ဂ
+                </i>
+            </a>
+        </div>
+        <div class="x-body">
+            <xblock>
+                <button class="layui-btn layui-btn-danger" onclick="delSelected()">
+                    <i class="layui-icon">&#xe640;</i>
+                    批量删除
+                </button>
+                <a href="{:url('intern/save',['id'=>'-'])}" class="layui-btn layui-btn-normal" id="selpart"><i class="layui-icon">&#xe605;</i>导出选中</a>
+                <a href="{:url('intern/save',['id'=>-1])}" class="layui-btn layui-btn-warm"><i class="layui-icon">&#xe601;</i>导出全部</a>
+
+                <!--<button class="layui-btn" onclick="question_add('添加问题','question-add.html','600','500')">
+                    <i class="layui-icon">&#xe608;</i>
+                    添加
+                </button>-->
+                <span class="x-right" style="line-height:40px">
+                    共有数据：{$intern_size} 条
+                </span>
+            </xblock>
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="selectAll" name="all" value="all" onclick="selectAll()">
+                        </th>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            <标题>                </标题>
+                        </th>
+                        <th>
+                            提交时间
+                        </th>
+                        <th>
+                            浏览次数
+                        </th>
+                        <th>
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="internList-body">
+                {foreach name='intern_list' item='vo'}
+                    <tr>
+                        <td>
+                            <input type="checkbox" value={$vo.id} name="one">
+                        </td>
+                        <td>
+                            {$vo.id}
+                        </td>
+                        <td>
+                            <!--<u style="cursor:pointer" onclick="question_show()">-->
+                            <u style="cursor:pointer">
+                                <a target="_blank" href="{:url('front/intern/detail', ['id'=>$vo['id']])}" target="_blank">
+                                    {$vo.title}
+                                </a>
+                            </u>
+                        </td>
+                        <td >
+                            {$vo.time_publish}
+                        </td>
+                        <td >
+                            {$vo.click_times}
+                        </td>
+                        <td class="td-manage">
+                            <!--<a title="编辑" href="javascript:;" onclick="question_edit('编辑','question-edit.html','4','','510')"
+                            class="ml-5" style="text-decoration:none">
+                                <i class="layui-icon">&#xe642;</i>
+                            </a>-->
+                            <a title="删除" href="javascript:;" onclick="question_del(this,{$vo.id})"
+                            style="text-decoration:none">
+                                <i class="layui-icon">&#xe640;</i>
+                            </a>
+                            <a title="置顶" href="javascript:;" onclick="stick(this,{$vo.id})"
+                               style="text-decoration:none">
+                                <i class="layui-icon">&#xe619;</i>
+                            </a>
+                            <a title="取消置顶" href="" onclick="stick_cancel(this,{$vo.id})"
+                               style="text-decoration:none">
+                                <i class="layui-icon">&#xe61a;</i>
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+
+            <!--<div id="page"></div>        layui自带分页器-->
+            <style>
+                .pagination{
+                    display: inline-flex;
+                }
+                .pagination .active {
+
+                }
+                .pagination .active span{
+                    color: #009688;
+                }
+            </style>
+            <div class="layui-box layui-laypage layui-laypage-default" id="layui-laypage-0" >
+            {$page}
+            </div>
+        </div>
+        {include file='public/base_js'}
+        <script>
+            $('input[type="checkbox"]').change(function(){
+                var check = $(this).is(":checked");
+                var link = $("#selpart").attr("href");
+                var value = $(this).val();
+                if(check){
+                    var pos = link.indexOf(".");
+                    var newlink = link.substring(0,pos)+"-"+$(this).val()+link.substring(pos)
+                    $("#selpart").attr("href",newlink);
+                    // alert($("#selpart").attr("href"));
+                }else{
+                    var newlink = link.substring(0,link.indexOf(value)-1)+link.substring(link.indexOf(value)+1);
+                    $("#selpart").attr("href",newlink);
+                    // alert(newlink)
+                }
+            });
+            layui.use(['laydate','element','laypage','layer'], function(){
+                $ = layui.jquery;//jquery
+              laydate = layui.laydate;//日期插件
+              lement = layui.element();//面包导航
+              laypage = layui.laypage;//分页
+              layer = layui.layer;//弹出层
+
+              //以上模块根据需要引入
+              laypage({
+                cont: 'page'
+                ,pages: 100
+                ,first: 1
+                ,last: 100
+                ,prev: '<em><</em>'
+                ,next: '<em>></em>'
+              });
+
+              var start = {
+                min: laydate.now()
+                ,max: '2099-06-16 23:59:59'
+                ,istoday: false
+                ,choose: function(datas){
+                  end.min = datas; //开始日选好后，重置结束日的最小日期
+                  end.start = datas //将结束日的初始值设定为开始日
+                }
+              };
+
+              var end = {
+                min: laydate.now()
+                ,max: '2099-06-16 23:59:59'
+                ,istoday: false
+                ,choose: function(datas){
+                  start.max = datas; //结束日选好后，重置开始日的最大日期
+                }
+              };
+
+              document.getElementById('LAY_demorange_s').onclick = function(){
+                start.elem = this;
+                laydate(start);
+              }
+              document.getElementById('LAY_demorange_e').onclick = function(){
+                end.elem = this
+                laydate(end);
+              }
+            });
+
+            //批量删除提交
+             function delSelected () {
+                layer.confirm('确认要删除吗？',function(index){
+                    //捉到所有被选中的，发异步进行删除
+                    layer.msg('删除成功', {icon: 1});
+
+                    var data = new Array();
+                    var j = 0;
+                    var input = document.getElementsByName("one");
+                    //遍历internList-body，获取所有子tr
+                    console.log(input.length);
+                    for (var i=0; i<input.length ;i++ )
+                    {
+                        if(input[i].checked){
+                            console.log(input[i].checked);
+                            data[j] = input[i].value;
+                            console.log(data[j]);
+                            j++;
+                            input[i].parentNode.parentNode.parentNode.removeChild(input[i].parentNode.parentNode);
+                            $(input[i]).parents("tr").remove();
+                        }
+                    }
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "{:url('intern/updateSelected')}",
+                        data: data,
+                        dataType: "json",
+                    })
+                });
+             }
+             function question_show (argument) {
+                layer.msg('可以跳到前台具体问题页面',{icon:1,time:1000});
+             }
+             /*添加*/
+            function question_add(title,url,w,h){
+                x_admin_show(title,url,w,h);
+            }
+            //编辑
+           function question_edit (title,url,id,w,h) {
+                x_admin_show(title,url,w,h);
+            }
+
+            /*删除*/
+            function question_del(obj,id){
+                layer.confirm('确认要删除吗？',function(index){
+                    //发异步删除数据
+                    $(obj).parents("tr").remove();
+                    layer.msg('已删除!',{icon:1,time:1000});
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "{:url('intern/update')}",
+                        data: {'id':id},
+                        dataType: "json",
+                        // success: function (data) {
+                        //     if (data.status == 0){
+                        //         alert(data.message);
+                        //         window.location.href = "{:url('index/index')}"
+                        //     }else{
+                        //         alert(data.message);
+                        //         window.location.href = "{:url('login/index')}"
+                        //     }
+                        // }
+                    })
+                });
+            }
+
+            /*置顶*/
+            function stick(obj,id){
+                layer.confirm('确认要置顶吗？',function(index){
+                    //发异步删除数据
+                    //$(obj).parents("tr").remove();
+                    layer.msg('已置顶!',{icon:1,time:1000});
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "{:url('intern/stick')}",
+                        data: {'id':id},
+                        dataType: "json",
+                        // success: function (data) {
+                        //     if (data.status == 0){
+                        //         alert(data.message);
+                        //         window.location.href = "{:url('index/index')}"
+                        //     }else{
+                        //         alert(data.message);
+                        //         window.location.href = "{:url('login/index')}"
+                        //     }
+                        // }
+                    })
+                });
+            }
+
+            function stick_cancel(obj,id){
+                layer.confirm('确认要取消置顶吗？',function(index){
+                    //发异步删除数据
+                    //$(obj).parents("tr").remove();
+                    layer.msg('已取消!',{icon:1,time:1000});
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "{:url('intern/stick_cancel')}",
+                        data: {'id':id},
+                        dataType: "json",
+                        // success: function (data) {
+                        //     if (data.status == 0){
+                        //         alert(data.message);
+                        //         window.location.href = "{:url('index/index')}"
+                        //     }else{
+                        //         alert(data.message);
+                        //         window.location.href = "{:url('login/index')}"
+                        //     }
+                        // }
+                    })
+                });
+            }
+
+            //批量删除提交
+            function delSelected () {
+                layer.confirm('确认要删除吗？',function(index){
+                    //捉到所有被选中的，发异步进行删除
+                    layer.msg('删除成功', {icon: 1});
+
+                    var data = new Array();
+                    var j = 0;
+                    var input = document.getElementsByName("one");
+                    //遍历internList-body，获取所有子tr
+                    console.log(input.length);
+                    for (var i=0;i<input.length;i++)
+                    {
+                        console.log("i = " + i);
+                        console.log(input[i].checked);
+                        if(input[i].checked){
+                            console.log("j = " + j);
+                            data[j] = input[i].value;
+                            console.log("id = " + data[j]);
+                            j++;
+                            //input[i].parentNode.parentNode.parentNode.removeChild(input[i].parentNode.parentNode);
+                            //$(input[i]).parents("tr").remove();
+                            $(input[i]).parents("tr").hide();
+                        }
+                    }
+
+                    console.log(data);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "{:url('intern/updateSelected')}",
+                        data: {'json':JSON.stringify(data)},
+                        dataType: "json",
+                    })
+                });
+            }
+
+            function selectAll(){
+                var checkbox = document.getElementById("selectAll");
+                var input = document.getElementsByName("one");
+
+                console.log(input.length);
+                if(checkbox.checked){
+                    for (var i=0;i<input.length ;i++ )
+                    {
+                        if(input[i].type=="checkbox")
+                            input[i].checked = true;
+                    }
+                }else{
+                    for (var i=0;i<input.length ;i++ )
+                    {
+                        if(input[i].type=="checkbox")
+                            input[i].checked = false;
+                    }
+                }
+            }
+            </script>
+
+    </body>
+</html>
