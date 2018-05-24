@@ -74,12 +74,7 @@
                 {$vo.id}
             </td>
             <td>
-                <!--<u style="cursor:pointer" onclick="question_show()">-->
-                <u style="cursor:pointer">
-                    <a target="_blank" href="{:url('front/intern/detail', ['id'=>$vo['id']])}" target="_blank">
-                        {$vo.title}
-                    </a>
-                </u>
+                {$vo.title}
             </td>
             <td >
                 {$vo.time_publish}
