@@ -15,8 +15,14 @@ class Thought extends Base
 
     public function index()
     {
+        $pageindex = request()->param('pageIndex');
+        $callbackcount = request()->param('callBackCount');
+
         $data = $this->db->getAll();
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
+
+        $result = array_slice($data, ($pageindex-1)*$callbackcount, $callbackcount);
+
+        return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     public function detail()
