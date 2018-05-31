@@ -12,10 +12,17 @@ class Intern extends Model
 
     public function getAll($search)
     {
-        $res = $this->where('is_allowed', 1)
+        /*$res = $this->where('is_allowed', 1)
             ->where(['title|corp_name|location|detail|salary|owner_id'=>['like',"%".$search."%"]])
             ->order('is_pinned desc,time_publish desc')
             ->field('id,title,time_publish,location,position,salary,is_pinned')
+            ->select();*/
+        $res = $this->alias('i')
+            ->join('user u','i.owner_id=u.id')
+            ->where('i.is_allowed', 1)
+            ->where(['i.title|i.corp_name|i.location|i.detail|i.salary|i.owner_id|u.name'=>['like',"%".$search."%"]])
+            ->order('i.is_pinned desc,i.time_publish desc')
+            ->field('i.id,i.title,i.time_publish,i.location,i.position,i.salary,i.is_pinned')
             ->select();
         return $res;
     }
