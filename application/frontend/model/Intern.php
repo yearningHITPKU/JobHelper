@@ -18,7 +18,7 @@ class Intern extends Model
             ->field('id,title,time_publish,location,position,salary,is_pinned')
             ->select();*/
         $res = $this->alias('i')
-            ->join('user u','i.owner_id=u.id')
+            ->join('user u','i.owner_id=u.uid')
             ->where('i.is_allowed', 1)
             ->where(['i.title|i.corp_name|i.location|i.detail|i.salary|i.owner_id|u.name'=>['like',"%".$search."%"]])
             ->order('i.is_pinned desc,i.time_publish desc')
@@ -41,7 +41,7 @@ class Intern extends Model
             ->select();*/
         //$res1 = $this->where('id',$id)->find();
         $res1 = $this->alias('i')
-            ->join('__USER__ u', 'i.owner_id=u.id')
+            ->join('__USER__ u', 'i.owner_id=u.uid')
             ->where('i.id', $id)
             ->field('i.*, u.name as owner_name')
             ->find();

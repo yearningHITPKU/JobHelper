@@ -41,7 +41,7 @@ class User extends Base
             //获取请求数据，自动过滤空值
             $data = array_filter($request->param());
             //设置删除条件
-            $map = ['id' => $data['id']];
+            $map = ['uid' => $data['id']];
             //更新intern表中的数据
             $result = \app\admin\model\User::destroy($map);
 
@@ -101,7 +101,7 @@ class User extends Base
 
         $id = $request->param()['id'];
         if($id==-1){     //下载全部
-            $data = model('User')->order('id asc')->select();
+            $data = model('User')->order('uid asc')->select();
         }else{//下载选中
             $ids = explode('-',$id);
             $data = \app\admin\model\User::all($ids);
@@ -133,7 +133,7 @@ class User extends Base
             for ($column = 0;$column<count($letter);$column++){
                 //写出长整数时，为避免被科学计数法表示，在前面加空格，用.连接
                 if($column ==0){
-                    $objPHPExcel->getActiveSheet()->setCellValue("$letter[$column]$row", $user->id);
+                    $objPHPExcel->getActiveSheet()->setCellValue("$letter[$column]$row", $user->uid);
                 }elseif ($column ==1){
                     $objPHPExcel->getActiveSheet()->setCellValue("$letter[$column]$row", $user->name);
                 }

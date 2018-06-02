@@ -42,7 +42,11 @@ class Thought extends Model
 
     public function getAll()
     {
-        $res = Db::query('select id,title,time_publish from thoughts ORDER BY time_publish DESC');
+        //$res = Db::query('select id,title,time_publish from thoughts ORDER BY time_publish DESC');
+        $res = Db::name('thoughts')
+            ->order('time_publish desc')
+            ->field('id,title,time_publish')
+            ->select();
         //halt($res);
         return $res;
     }
