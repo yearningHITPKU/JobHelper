@@ -22,7 +22,7 @@ class Thought extends Model
         $this->where('id', $id)->setInc('click_times', 1);
         //$res1 = $this->where('id',$id)->find();
         $res1 = $this->alias('t')
-            ->join('__USER__ u', 'i.owner_id=u.uid')
+            ->join('__USER__ u', 't.owner_id=u.uid')
             ->where('t.id', $id)
             ->field('t.*, u.name as owner_name')
             ->find();
