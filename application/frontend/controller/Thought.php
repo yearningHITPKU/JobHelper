@@ -64,7 +64,7 @@ class Thought extends Base
         $thought->position = $position;
         $thought->title = $title;
         $thought->owner_id = $user_id;
-        $thought->owner_name = $owner;
+        //$thought->owner_name = $owner;
         $thought->save();
 
         return json_encode($thought, JSON_UNESCAPED_UNICODE);
