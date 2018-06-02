@@ -20,7 +20,12 @@ class Thought extends Model
     public function getDetail($id,$user_id)
     {
         $this->where('id', $id)->setInc('click_times', 1);
-        $res1 = $this->where('id',$id)->find();
+        //$res1 = $this->where('id',$id)->find();
+        $res1 = $this->alias('t')
+            ->join('__USER__ u', 'i.owner_id=u.uid')
+            ->where('t.id', $id)
+            ->field('t.*, u.name as owner_name')
+            ->find();
         $res2 = Db::name('collection')
             ->where('user_id',$user_id)
             ->where('target_id',$id)
