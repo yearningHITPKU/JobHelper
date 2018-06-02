@@ -9,6 +9,7 @@ class Thought extends Model
 {
     protected $pk = 'id';
     protected $table = 'thoughts';
+
     public function getThought($thought_type)
     {
         $res = $this->where('type', $thought_type)
@@ -69,9 +70,15 @@ class Thought extends Model
 
     public function getSearch($search)
     {
-        $res = $this->where(['owner_id|title|corp_name|position|detail|owner_name'=>['like',"%".$search."%"]])
+        /*$res = $this->where(['owner_id|title|corp_name|position|detail|owner_name'=>['like',"%".$search."%"]])
             ->order('time_publish desc')
             ->field('id,title,corp_name,position,time_publish')
+            ->select();*/
+        $res = $this->alias('t')
+            ->join('user u','t.owner_id=u.uid')
+            ->where(['t.owner_id|t.title|t.corp_name|t.position|t.detail|u.name'=>['like',"%".$search."%"]])
+            ->order('t.time_publish desc')
+            ->field('t.id,t.title,t.corp_name,t.position,t.time_publish')
             ->select();
         return $res;
     }
