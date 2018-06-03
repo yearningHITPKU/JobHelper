@@ -22,10 +22,14 @@ class Collection extends Base
         $target_type = request()->param('currentTab');
         $isCollected = request()->param('isCollected');
 
-        Debug::dump($isCollected);
+        //Debug::dump($isCollected);
         if($isCollected){
+            $user = Db::name('user')
+                ->where('uid',$user_id)
+                ->find();
+
             $collection = new \app\frontend\model\Collection();
-            $collection->user_id = $user_id;
+            $collection->user_id = $user['id'];
             $collection->target_id = $target_id;
             $collection->target_type = $target_type;
             $collection->save();
