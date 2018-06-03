@@ -161,16 +161,20 @@ class Index extends Base
     {
         $id = request()->param('user_id');
         $interns = Db::name('interns')
-            ->where('owner_id', $id)
-            ->order('time_publish desc')
-            ->field('id,title,time_publish,location,position,salary')
+            ->alias('i')
+            ->join('user u', 'u.id=i.owner_id')
+            ->where('u.uid', $id)
+            ->order('i.time_publish desc')
+            ->field('i.id,i.title,i.time_publish,i.location,i.position,i.salary')
             ->select();
         //$interns = $this->db->getUserIntern($id);
         //$thoughts = Db::query('select * from thoughts where owner_id=? ORDER BY time_publish DESC', [$id]);
         $thoughts = Db::name('thoughts')
-            ->where('owner_id', $id)
-            ->order('time_publish desc')
-            ->field('id,title,corp_name,position,time_publish')
+            ->alias('t')
+            ->join('user u','u.id=t.owner_id')
+            ->where('u.uid', $id)
+            ->order('t.time_publish desc')
+            ->field('t.id,t.title,t.corp_name,t.position,t.time_publish')
             ->select();
         $both = array($interns,$thoughts);
         return json_encode($both, JSON_UNESCAPED_UNICODE);
