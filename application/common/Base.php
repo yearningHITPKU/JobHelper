@@ -29,7 +29,7 @@ class Base extends Controller
         $detailURL = 'http://weixiao.qq.com/apps/school-auth/login?media_id=gh_c5c47de251c1&app_key=116BF40DF1AFB055&redirect_uri=https://icampus.ss.pku.edu.cn/iaaa/index.php/Home/Index/appredirect//appid/sspkuxd5h873wfr6ke/detail/1.html';
         $detailinfo = HttpService::http($detailURL,[]);
         Log::record(json_decode($detailinfo, true));
-        Debug::dump(json_decode($detailinfo, true));
+        //Debug::dump(json_decode($detailinfo, true));
 
         if(!session('user_id')) {
             //获得加密的rawdata

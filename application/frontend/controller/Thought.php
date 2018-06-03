@@ -58,12 +58,16 @@ class Thought extends Base
         $position = request()->param('position');
         $detail = request()->param('detail');
 
+        $user = Db::name('user')
+            ->where('uid',$user_id)
+            ->find();
+
         $thought = new \app\frontend\model\Thought();
         $thought->detail = $detail;
         $thought->corp_name = $corp_name;
         $thought->position = $position;
         $thought->title = $title;
-        $thought->owner_id = $user_id;
+        $thought->owner_id = $user->uid;
         //$thought->owner_name = $owner;
         $thought->save();
 
