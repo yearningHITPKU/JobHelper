@@ -67,7 +67,7 @@ class Thought extends Base
         $thought->corp_name = $corp_name;
         $thought->position = $position;
         $thought->title = $title;
-        $thought->owner_id = $user['uid'];
+        $thought->owner_id = $user['id'];
         //$thought->owner_name = $owner;
         $thought->save();
 

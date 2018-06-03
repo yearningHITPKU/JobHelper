@@ -129,7 +129,7 @@ class Index extends Base
         $intern->title = $title;
         $intern->corp_name = $corp_name;
         $intern->type = $type;
-        $intern->owner_id = $user['uid'];
+        $intern->owner_id = $user['id'];
         //$intern->owner_name = $owner;
         $intern->salary = $salary;
         //$intern->time_publish = date("Y-m-d H:i",time());
