@@ -45,8 +45,13 @@ class Intern extends Model
             ->where('i.id', $id)
             ->field('i.*, u.name as owner_name')
             ->find();
+
+        $user = Db::name('user')
+            ->where('uid',$user_id)
+            ->find();
+
         $res2 = Db::name('collection')
-            ->where('user_id',$user_id)
+            ->where('user_id',$user['id'])
             ->where('target_id',$id)
             ->where('target_type',0)
             ->select();
