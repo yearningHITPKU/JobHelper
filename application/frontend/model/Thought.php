@@ -23,14 +23,21 @@ class Thought extends Model
         $this->where('id', $id)->setInc('click_times', 1);
         //$res1 = $this->where('id',$id)->find();
         $res1 = $this->alias('t')
-            ->join('__USER__ u', 't.owner_id=u.uid')
+            ->join('__USER__ u', 't.owner_id=u.id')
             ->where('t.id', $id)
             ->field('t.*, u.name as owner_name')
             ->find();
-        $res2 = Db::name('collection')
+        /*$res2 = Db::name('collection')
             ->where('user_id',$user_id)
             ->where('target_id',$id)
             ->where('target_type',1)
+            ->select();*/
+        $res2 = Db::name('collection')
+            ->alias('c')
+            ->join('__USER__ u', 'c.user_id=u.id')
+            ->where('u.uid',$user_id)
+            ->where('c.target_id',$id)
+            ->where('c.target_type',1)
             ->select();
         $isCollected = false;
         if(sizeof($res2) == 0){
@@ -60,10 +67,16 @@ class Thought extends Model
     public function getUserThought($user_id)
     {
         //$res = Db::query('select id,title,time_publish from thoughts where owner_id=? ORDER BY time_publish DESC', [$user_id]);
-        $res = $thoughts = Db::name('thoughts')
+        /*$res = Db::name('thoughts')
             ->where('owner_id', $user_id)
             ->order('time_publish desc')
             ->field('id,title,corp_name,position,time_publish')
+            ->select();*/
+        $res = $this->alias('t')
+            ->join('user u','t.owner_id=u.id')
+            ->where('u.uid', $user_id)
+            ->order('t.time_publish desc')
+            ->field('t.id,t.title,t.corp_name,t.position,t.time_publish')
             ->select();
         return $res;
     }
@@ -75,7 +88,7 @@ class Thought extends Model
             ->field('id,title,corp_name,position,time_publish')
             ->select();*/
         $res = $this->alias('t')
-            ->join('user u','t.owner_id=u.uid')
+            ->join('user u','t.owner_id=u.id')
             ->where(['t.owner_id|t.title|t.corp_name|t.position|t.detail|u.name'=>['like',"%".$search."%"]])
             ->order('t.time_publish desc')
             ->field('t.id,t.title,t.corp_name,t.position,t.time_publish')
