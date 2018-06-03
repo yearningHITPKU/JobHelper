@@ -23,18 +23,17 @@ class Collection extends Base
         $isCollected = request()->param('isCollected');
 
         //Debug::dump($isCollected);
+        $user = Db::name('user')
+            ->where('uid',$user_id)
+            ->find();
         if($isCollected){
-            $user = Db::name('user')
-                ->where('uid',$user_id)
-                ->find();
-
             $collection = new \app\frontend\model\Collection();
             $collection->user_id = $user['id'];
             $collection->target_id = $target_id;
             $collection->target_type = $target_type;
             $collection->save();
         }else{
-            \app\frontend\model\Collection::destroy(['user_id'=>$user_id, 'target_id'=>$target_id, 'target_type'=>$target_type]);
+            \app\frontend\model\Collection::destroy(['user_id'=>$user['id'], 'target_id'=>$target_id, 'target_type'=>$target_type]);
         }
         //return json_encode($collection, JSON_UNESCAPED_UNICODE);
     }
